@@ -1,0 +1,43 @@
+name: Project Setup
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    name: "Terraform setup"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # - name: Terraform Init
+      #   uses: hashicorp/setup-terraform@v2
+      #   id: init
+      # - run: cd terraform
+      # - run: rm -fr .terraform
+      # - run: terraform --version
+      # - run: terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${USERNAME}" -backend-config="password=${PASSWD}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
+
+      - name: Validate terraform
+        uses: hashicorp/setup-terraform@v2
+        id: validate
+      - run: cd terraform
+      - run: rm -fr .terraform
+      - run: terraform --version
+      - run: terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${USERNAME}" -backend-config="password=${PASSWD}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
+      - run: terraform validate
+
+      - name: Plan terraform
+        uses: hashicorp/setup-terraform@v2
+        id: plan
+      - run: cd terraform
+      - run: rm -fr .terraform
+      - run: terraform --version
+      - run: terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${USERNAME}" -backend-config="password=${PASSWD}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
+      - run: terraform plan -var "do_token=${{ secrets.DO_PAT }}" -var "do_token=${{ secrets.DO_PAT }}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${{ secrets.DO_KEY_01 }}"
+      
+        
+
