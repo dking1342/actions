@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # - name: Terraform Init
+      # - name: Terraform Inits
       #   uses: hashicorp/setup-terraform@v2
       #   id: init
       # - run: cd terraform
