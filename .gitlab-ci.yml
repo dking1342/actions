@@ -1,0 +1,117 @@
+stages:
+  - validate
+  - plan
+  - apply
+  - install
+
+image:
+  name: hashicorp/terraform:light
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.local/bin'
+
+variables:
+    ANSIBLE_HOST_KEY_CHECKING: 'false'
+    ANSIBLE_FORCE_COLOR: 'true'
+    ANSIBLE_PYTHON_INTERPRRTER: /usr/bin/python3
+    TF_ROOT: ${CI_PROJECT_DIR}/terraform
+    TF_PROJECT_ROOT: ${CI_PROJECT_DIR}
+
+before_script:
+  - export ANSIBLE_CONFIG="$(pwd)"
+  - export DO_PAT="${DO_PAT}"
+  - export DO_KEY_01="${DO_KEY_01}"
+  - export DO_KEY_01_PUB="${DO_KEY_01_PUB}"
+  - export PROJECT_NAME="${PROJECT_NAME}"
+  - export PROJECT_ID="${PROJECT_ID}"
+  - cd ${TF_ROOT}
+  - rm -fr .terraform
+  - terraform --version
+  - terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/${PROJECT_NAME}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/${PROJECT_NAME}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${PROJECT_ID}/terraform/state/${PROJECT_NAME}/lock" -backend-config="username=${USERNAME}" -backend-config="password=${PASSWD}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
+
+
+validate:
+  stage: validate
+  script:
+    - terraform validate
+
+plan:
+  stage: plan
+  script:
+    - terraform plan -var "do_token=${DO_PAT}" -var "do_token=${DO_PAT}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${DO_KEY_01}"
+  dependencies:
+    - validate
+
+apply:
+  stage: apply
+  script:
+    - apk update
+    - apk add python3
+    - python3 --version
+    - apk add curl
+    - apk add sudo
+    - apk update
+    - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+    - python3 get-pip.py --user
+    - python3 -m pip -V
+    - python3 -m pip install --user ansible
+    - python3 -m pip install kubernetes
+    - ansible --version
+    - apk add doctl
+    - doctl version
+    - doctl auth init -t ${DO_PAT}
+    - doctl account get
+    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    - curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+    - echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
+    - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    - ansible-galaxy collection install kubernetes.core
+    - mkdir ~/.ssh
+    - echo "${DO_KEY_01}" > ~/.ssh/do_key_01
+    - echo "${DO_KEY_01_PUB}" > ~/.ssh/do_key_01.pub
+    - chmod 600 ~/.ssh
+    - chmod 600 ~/.ssh/do_key_01
+    - chmod 600 ~/.ssh/do_key_01.pub
+    - terraform apply -auto-approve -var "do_token=${DO_PAT}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${DO_KEY_01}"
+    - cd ..
+    - ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i k8s.yaml ./ansible/cluster-install.yaml -vvv
+  dependencies:
+    - plan
+  when: manual
+  only:
+    - main
+
+# cluster setup installation:
+#   stage: install
+#   script:
+#     - apk update
+#     - apk add python3
+#     - python3 --version
+#     - apk add curl
+#     - apk add sudo
+#     - apk update
+#     - curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+#     - python3 get-pip.py --user
+#     - python3 -m pip -V
+#     - python3 -m pip install --user ansible
+#     - python3 -m pip install kubernetes
+#     - ansible --version
+#     - apk add doctl
+#     - doctl version
+#     - doctl auth init -t ${DO_PAT}
+#     - doctl account get
+#     - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+#     - curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+#     - echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
+#     - sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+#     - ansible-galaxy collection install kubernetes.core
+#     - mkdir ~/.ssh
+#     - echo "${DO_KEY_01}" > ~/.ssh/do_key_01
+#     - echo "${DO_KEY_01_PUB}" > ~/.ssh/do_key_01.pub
+#     - chmod 600 ~/.ssh
+#     - chmod 600 ~/.ssh/do_key_01
+#     - chmod 600 ~/.ssh/do_key_01.pub
+#     - doctl kubernetes cluster kubeconfig save 7a0e7bd2-9d7f-42da-a16f-f0498f112bff 
+#     - cd ..
+#     - ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i k8s.yaml ./ansible/cluster-test.yaml -vvv
+

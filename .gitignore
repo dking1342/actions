@@ -1,0 +1,9 @@
+# .terraform/
+*.tfstate*
+*.tfvars
+*plan.txt
+*.tfplan
+.terraform-version
+*.log
+scripts
+/**/*.sh

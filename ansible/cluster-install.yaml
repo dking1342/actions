@@ -1,0 +1,19 @@
+- name: Install loadbalancer and nginx into cluster
+  hosts: localhost
+  connection: local
+
+  collections:
+    - kubernetes.core.k8s
+
+  tasks:
+    - name: Create a service of loadbalancer
+      kubernetes.core.k8s:
+        state: present
+        namespace: default
+        src: ../manifests/loadbalancer.yaml
+
+    - name: Create a deployment of nginx
+      kubernetes.core.k8s:
+        state: present
+        namespace: default
+        src: ../manifests/http-nginx.yaml
