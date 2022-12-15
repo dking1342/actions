@@ -24,11 +24,12 @@ jobs:
       - name: Install python3
         run: |
           python3 --version
+          python3 get-pip.py --user
+          python3 -m pip -V
 
       - name: Install curl
         run: |
-          sudo apt-get update
-          sudo apt-get curl
+          curl 127.0.0.1
 
       - name: Install pip
         run: |
@@ -67,5 +68,7 @@ jobs:
       - run: cd terraform && terraform apply -auto-approve -lock=false -var "do_token=${{ secrets.DO_PAT }}" -var "do_token=${{ secrets.DO_PAT }}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${{ secrets.DO_KEY_01 }}"
       - run: ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i k8s.yaml ./ansible/cluster-install.yaml -vvv
 
+
         # sudo apt-get update
-        # sudo apt-get python3.10
+        # sudo apt-get curl
+
