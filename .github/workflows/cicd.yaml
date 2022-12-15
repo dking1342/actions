@@ -21,6 +21,44 @@ jobs:
           doctl auth init -t ${{ secrets.DO_PAT }} 
           doctl account get
 
+      - name: Install python3
+        run: |
+          sudo apt-get update
+          sudo apt-get python3
+          python3 --version
+
+      - name: Install curl
+        run: |
+          sudo apt-get update
+          sudo apt-get curl
+
+      - name: Install pip
+        run: |
+          sudo apt-get update
+          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py\
+          python3 get-pip.py --user
+          python3 -m pip -V
+
+      - name: Install ansible and kubernetes
+        run: |
+          sudo apt-get update
+          python3 -m pip install --user ansible
+          python3 -m pip install kubernetes
+          ansible --version
+
+      - name: Install kubectl
+        run: |
+          sudo apt-get update
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: Install kubernetes core
+        run: |
+          sudo apt-get update
+          ansible-galaxy collection install kubernetes.core
+
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v2
       - run: terraform --version
