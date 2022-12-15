@@ -15,11 +15,14 @@ jobs:
 
       - name: Create kube directory
         run: |
-          sudo mkdir /home/runner/.kube/config
-          ls -la /home/runner/.kube
-          ls -la /home/runner/.kube/config
-          chmod 600 /home/runner/.kube
-          ls -ld /home/runner/.kube
+          pwd
+          ls -la /home
+          ls -la /home/runner
+      # sudo mkdir /home/runner/.kube/config
+      # ls -la /home/runner/.kube
+      # ls -la /home/runner/.kube/config
+      # chmod 600 /home/runner/.kube
+      # ls -ld /home/runner/.kube
 
       # - name: Install doctl
       #   run: |
