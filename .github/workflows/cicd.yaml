@@ -7,47 +7,55 @@ on:
 
 jobs:
   terraform:
-    name: "Terraform setup"
+    name: "Kubernetes cluster installation"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install doctl
-        run: |
-          sudo apt-get update
-          sudo snap install doctl
-          doctl version 
-          doctl auth init -t ${{ secrets.DO_PAT }} 
-          doctl account get
-
-      - name: Install ansible and kubernetes
-        run: |
-          sudo apt-get update
-          python3 -m pip install --user ansible
-          python3 -m pip install kubernetes
-          ansible --version
-
-      - name: Install kubectl
-        run: |
-          sudo apt-get update
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-          echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: Install kubernetes core
-        run: |
-          sudo apt-get update
-          ansible-galaxy collection install kubernetes.core
-
       - name: Create kube directory
         run: |
-          mkdir /home/runner/.kube/config
+          sudo mkdir /home/runner/.kube/config
           ls -la /home/runner/.kube
           ls -la /home/runner/.kube/config
           chmod 600 /home/runner/.kube
           ls -ld /home/runner/.kube
+
+      # - name: Install doctl
+      #   run: |
+      #     sudo apt-get update
+      #     sudo snap install doctl
+      #     doctl version 
+      #     doctl auth init -t ${{ secrets.DO_PAT }} 
+      #     doctl account get
+
+      # - name: Install ansible and kubernetes
+      #   run: |
+      #     sudo apt-get update
+      #     python3 -m pip install --user ansible
+      #     python3 -m pip install kubernetes
+      #     ansible --version
+
+      # - name: Install kubectl
+      #   run: |
+      #     sudo apt-get update
+      #     curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      #     curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+      #     echo "$(cat kubectl.sha256)  kubectl" | sha256sum -c
+      #     sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      # - name: Install kubernetes core
+      #   run: |
+      #     sudo apt-get update
+      #     ansible-galaxy collection install kubernetes.core
+
+      # - name: Create kube directory
+      #   run: |
+      #     mkdir /home/runner/.kube/config
+      #     ls -la /home/runner/.kube
+      #     ls -la /home/runner/.kube/config
+      #     chmod 600 /home/runner/.kube
+      #     ls -ld /home/runner/.kube
 
       # - name: Kubernetes Cluster Setup
       #   uses: hashicorp/setup-terraform@v2
