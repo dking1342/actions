@@ -1,5 +1,5 @@
 plugin: kubernetes.core.k8s
 connections: 
   - name: cluster
-    kubeconfig: ~/.kube/config
+    kubeconfig: /home/runner/.kube/config
 
