@@ -15,8 +15,8 @@ jobs:
 
       - name: Create kube directory
         run: |
-          sudo -u root mkdir -p /home/runner/.kube/config
-          sudo -u root chmod 777 /home/runner/.kube/config
+          sudo -u root mkdir -p /home/runner/.kube
+          sudo -u root chmod 777 /home/runner/.kube
 
       - name: Install doctl
         run: |
