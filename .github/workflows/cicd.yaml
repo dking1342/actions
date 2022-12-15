@@ -13,10 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Terraform Setup
-        uses: hashicorp/setup-terraform@v2
-      - run: su root
-      - run: whoami
+      - name: Install doctl
+        run: |
+          apt-get update
+          apt-get install doctl
+
+      # - name: Terraform Setup
+      #   uses: hashicorp/setup-terraform@v2
       # - run: apt update
       # - run: apt install doctl
       # - run: terraform --version
