@@ -18,7 +18,7 @@ jobs:
           pwd
           ls -la /home
           ls -la /home/runner
-          sudo -u root mkdir /home/runner/.kube/config
+          sudo -u root mkdir -p /home/runner/.kube/config
           ls -la /home/runner/.kube
           ls -la /home/runner/.kube/config
 
