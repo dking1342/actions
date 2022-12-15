@@ -20,6 +20,6 @@ jobs:
       - run: cd terraform && terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${{ secrets.USERNAME }}" -backend-config="password=${{ secrets.PASSWD }}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
       - run: cd terraform && terraform validate
       - run: cd terraform && terraform plan -lock=false -var "do_token=${{ secrets.DO_PAT }}" -var "do_token=${{ secrets.DO_PAT }}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${{ secrets.DO_KEY_01 }}"
-      - run: cd terraform && terraform apply -auto-approve -var "do_token=${{ secrets.DO_PAT }}" -var "do_token=${{ secrets.DO_PAT }}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${{ secrets.DO_KEY_01 }}"
+      - run: cd terraform && terraform apply -auto-approve -lock=false -var "do_token=${{ secrets.DO_PAT }}" -var "do_token=${{ secrets.DO_PAT }}" -var "pvt_key=~/.ssh/do_key_01" -var "pub_key=~/.ssh/do_key_01.pub" -var "ssh_key=${{ secrets.DO_KEY_01 }}"
       - run: ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i k8s.yaml ./ansible/cluster-install.yaml -vvv
 
