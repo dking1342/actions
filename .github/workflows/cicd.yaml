@@ -17,8 +17,6 @@ jobs:
         run: |
           sudo -u root mkdir -p /home/runner/.kube/config
           sudo -u root chmod 777 /home/runner/.kube/config
-          ls -la /home/runner/.kube/
-          ls -la /home/runner/.kube/config
 
       # - name: Install doctl
       #   run: |

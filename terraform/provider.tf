@@ -28,6 +28,10 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
   }
 
   provisioner "local-exec" {
+    command = "sudo snap connect doctl:kube-config"
+  }
+
+  provisioner "local-exec" {
     command = "doctl kubernetes cluster kubeconfig save ${digitalocean_kubernetes_cluster.cluster.id}"
   }
 
