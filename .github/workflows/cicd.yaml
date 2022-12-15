@@ -17,8 +17,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo snap install doctl
-          doctl version \
-          doctl auth init -t ${{ secrets.DO_PAT }} \
+          doctl version 
+          doctl auth init -t ${{ secrets.DO_PAT }} 
           doctl account get
 
 
