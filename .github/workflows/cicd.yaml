@@ -15,15 +15,14 @@ jobs:
 
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v2
-      - run: |
-          terraform --version \
-          ls -la terraform \
-          cd terraform && rm -fr .terraform && rm -fr .terraform.lock.hcl \
-          ls -la terraform \
-          pwd \
-          cd terraform \
-          cd terraform && terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${{ secrets.USERNAME }}" -backend-config="password=${{ secrets.PASSWD }}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5" \
-          cd terraform && terraform validate
+      - run: terraform --version
+      - run: ls -la terraform
+      - run: cd terraform && rm -fr .terraform && rm -fr .terraform.lock.hcl
+      - run: ls -la terraform 
+      - run: pwd 
+      - run: cd terraform 
+      - run: cd terraform && terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${{ secrets.USERNAME }}" -backend-config="password=${{ secrets.PASSWD }}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
+      - run: cd terraform && terraform validate
 
 
       # - name: Terraform Inits
