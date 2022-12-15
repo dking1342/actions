@@ -31,13 +31,4 @@ resource "digitalocean_kubernetes_cluster" "cluster" {
     command = "doctl kubernetes cluster kubeconfig save ${digitalocean_kubernetes_cluster.cluster.id}"
   }
 
-  provisioner "local-exec" {
-    command = "export KUBE=${digitalocean_kubernetes_cluster.cluster.id}"
-  }
-
-  provisioner "local-exec" {
-    command = "env"
-  }
-
-
 }
