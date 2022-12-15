@@ -24,7 +24,7 @@ jobs:
       - name: Install python3
         run: |
           sudo apt-get update
-          sudo apt-get python3
+          sudo apt-get python3.10
           python3 --version
 
       - name: Install curl
