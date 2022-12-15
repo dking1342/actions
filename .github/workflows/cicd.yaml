@@ -17,7 +17,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
       - run: |
           terraform --version \
-          ls -la terraform
+          ls -la terraform \
           cd terraform && rm -fr .terraform && rm -fr .terraform.lock.hcl \
           ls -la terraform \
           pwd \
