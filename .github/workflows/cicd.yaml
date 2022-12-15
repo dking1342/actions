@@ -16,7 +16,7 @@ jobs:
       - name: Install doctl
         run: |
           sudo apt-get update
-          sudo apt-get install doctl
+          sudo snap install doctl
 
       # - name: Terraform Setup
       #   uses: hashicorp/setup-terraform@v2
