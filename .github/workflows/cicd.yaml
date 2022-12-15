@@ -15,7 +15,7 @@ jobs:
 
       - name: Terraform Setup
         uses: hashicorp/setup-terraform@v2
-      - run: id
+      - run: su root
       - run: whoami
       # - run: apt update
       # - run: apt install doctl
