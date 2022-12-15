@@ -24,7 +24,6 @@ jobs:
       - name: Install python3
         run: |
           python3 --version
-          python3 get-pip.py --user
           python3 -m pip -V
 
       - name: Install curl
