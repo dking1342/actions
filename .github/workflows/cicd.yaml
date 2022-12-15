@@ -24,18 +24,13 @@ jobs:
       - name: Install python3
         run: |
           python3 --version
-          python3 -m pip -V
 
-      - name: Install curl
-        run: |
-          curl 127.0.0.1
-
-      - name: Install pip
-        run: |
-          sudo apt-get update
-          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py\
-          python3 get-pip.py --user
-          python3 -m pip -V
+      # - name: Install pip
+      #   run: |
+      #     sudo apt-get update
+      #     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py\
+      #     python3 get-pip.py --user
+      #     python3 -m pip -V
 
       - name: Install ansible and kubernetes
         run: |
