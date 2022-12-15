@@ -37,7 +37,9 @@ jobs:
         id: pipeline
       - run: pwd
       - run: ls -la
-      # - run: cd terraform
+      - run: cd terraform
+      - run: pwd
+      - run: ls -la
       # - run: rm -fr .terraform
       # - run: terraform --version
       # - run: cd terraform && terraform init -backend-config="address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}" -backend-config="lock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="unlock_address=https://gitlab.com/api/v4/projects/${{ secrets.PROJECT_ID }}/terraform/state/${{ secrets.PROJECT_NAME }}/lock" -backend-config="username=${USERNAME}" -backend-config="password=${PASSWD}" -backend-config="lock_method=POST" -backend-config="unlock_method=DELETE" -backend-config="retry_wait_min=5"
