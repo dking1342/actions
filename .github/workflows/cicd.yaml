@@ -7,7 +7,7 @@ on:
 
 jobs:
   terraform:
-    name: "Kubernetes cluster installation"
+    name: "Terraform setup"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,14 +44,6 @@ jobs:
         run: |
           sudo apt-get update
           ansible-galaxy collection install kubernetes.core
-
-      - name: Create kube directory
-        run: |
-          mkdir /home/runner/.kube/config
-          ls -la /home/runner/.kube
-          ls -la /home/runner/.kube/config
-          chmod 600 /home/runner/.kube
-          ls -ld /home/runner/.kube
 
       - name: Kubernetes Cluster Setup
         uses: hashicorp/setup-terraform@v2
